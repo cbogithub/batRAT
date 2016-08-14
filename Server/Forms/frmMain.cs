@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Client {
-    public partial class Form1 : Form {
-        public Form1() {
+namespace Server.Forms {
+    public partial class frmMain : Form {
+        public frmMain() {
             InitializeComponent();
         }
     }
