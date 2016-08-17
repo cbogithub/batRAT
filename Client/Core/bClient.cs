@@ -18,13 +18,10 @@ namespace Client.Core {
         Socket clientSocket;
         IPEndPoint ipEndPoint;
 
-        byte[] buffer;
-
         public bClient(IPEndPoint _ipEndPoint) {
             ipEndPoint = _ipEndPoint;
             clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientSocket.BeginConnect("127.0.0.1", 5454, OnConnect, null);
-            buffer = new byte[1024];
         }
 
         void OnConnect(IAsyncResult ar) {
