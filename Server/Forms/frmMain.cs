@@ -26,9 +26,16 @@ namespace Server.Forms {
 
             server.OnDataSent += (soc, bytes) => {
                 IPEndPoint ip = soc.LocalEndPoint as IPEndPoint;
-                MessageBox.Show(bytes + " bytes sent to " + ip.Address + "!", "Data Sent!");
+                
             };
-            server.StartListen();            
+
+            server.OnDataReceived += (soc, msg) => {
+                IPEndPoint ip = soc.LocalEndPoint as IPEndPoint;
+                
+                this.Invoke((MethodInvoker)(() => listBox2.Items.Add(ip.Address + " :" + msg)));
+            };
+
+            server.StartListen();       
         }
 
         private void button2_Click(object sender, EventArgs e) {
@@ -37,7 +44,22 @@ namespace Server.Forms {
                     int selectedIndex = listBox1.SelectedIndex;
                     Socket selectedSocket = server.allConnections[selectedIndex];
                     TestCommand testCommand = new TestCommand();
-                    testCommand.Message = "Test Command";
+                    testCommand.Message = "Test";
+                    testCommand.MessageType = MessageTypes.TEST;
+                    server.Send<TestCommand>(testCommand, selectedSocket);
+                    server.StartReceive();
+                }
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e) {
+            if(listBox1.Items.Count > 0) {
+                if(server.allConnections.Count > 0) {
+                    int selectedIndex = listBox1.SelectedIndex;
+                    Socket selectedSocket = server.allConnections[selectedIndex];
+                    TestCommand testCommand = new TestCommand();
+                    testCommand.Message = "Message";
+                    testCommand.MessageType = MessageTypes.MESSAGE;
                     server.Send<TestCommand>(testCommand, selectedSocket);
                 }
             }
