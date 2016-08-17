@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Windows.Forms;
-using Client.Forms;
+using System.Net;
+
+using Client.Core;
 
 namespace Client {
     static class Program {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
         static void Main() {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
+            Console.ReadKey();
+            bClient client = new bClient(new IPEndPoint(IPAddress.Any, 5454));
+            client.StartReceive();
+            Console.ReadKey();
         }
     }
 }
