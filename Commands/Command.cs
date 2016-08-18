@@ -4,8 +4,7 @@ using batRAT;
 
 namespace batRAT.Commands {
     [Serializable]
-    public class TestCommand {
+    public class Command {
         public string Message { get; set; }
-        public MessageTypes MessageType { get; set; }
     }
 }

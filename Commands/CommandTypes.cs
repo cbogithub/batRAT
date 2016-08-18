@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace batRAT.Commands {
-    public enum MessageTypes {
-        MESSAGE,
-        TEST
+    public enum CommandTypes {
+        DesktopScreenShot = 1,
+        TestMessage = 2,
+        HelloWorld = 3
     }
 }

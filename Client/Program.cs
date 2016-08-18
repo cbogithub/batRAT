@@ -8,7 +8,6 @@ namespace Client {
         static void Main() {
             Console.ReadKey();
             bClient client = new bClient(new IPEndPoint(IPAddress.Any, 5454));
-            client.StartReceive();
             Console.ReadKey();
         }
     }
