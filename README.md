@@ -10,3 +10,6 @@ batRAT is a open source remote administration tool coded in C#. It will provide 
 
 ### Thank you!
 Thanks for using and supporting batRAT.
+
+### Important Update!
+This project will not updated anymore. I will make another repo for remote administration tool in C#.
